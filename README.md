@@ -44,3 +44,10 @@ This is important for timers which needs to show the overtime
 This only works for TMS parts. The timer will persist for 1 minute after being stopped. This allows the counselor to see the student's time as well as an indication that the 1 minute alloted for counsel is up.
 ##### CO's Visit
 This changes the times to fit the additional talks during CO's Visit. Please press Fetch Data to reload the CO's Visit Time.
+
+#Use
+Access the script settings, set songs, set time, and other things by going to *Tools > Scripts > kh-av-helper.py*
+
+#Bugs
+-When closing OBS, a message appears that "OBS has crashed".
+-You can file a bug report on the Issue tab if you found any bug or has any suggestion.
