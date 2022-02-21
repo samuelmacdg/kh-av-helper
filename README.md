@@ -13,6 +13,8 @@ The script uses a text source to display the timer. Prepare a text source which 
 ### Songs Folder
 Download all the songs used for the meetings (video). Make sure that all songs are in the same resolution (preferrably 720p) and same language. You can also download all song using the JW Library app.
 
+# Download
+Download the latest zip from the Release and extract to the directory of your choice. Go to the Releases page by clicking on [this link](https://github.com/samuelmacdg/kh-av-helper/releases/).
 
 # Installation
 Launch OBS and go to *Tools > Scripts > Python Settings*. Click *Browse* and select the Python 3.6 installation directory. 
