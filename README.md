@@ -36,10 +36,10 @@ You can access the song settings on the *Song Settings* group. Other settings ca
 ##### Timer Text Source
 Select the text source that will be used to display the timer. Configure the size and style of this source on OBS. Please note that the color will be overriden.
 ##### Timer Colors
--Clock Color - color used for the standby clock
--Default Color - color used for the timer and countdown
--Warning Color - color used when the timer is less than 30 seconds
--Overtime Color - color used time limit has exceeded
+- Clock Color - color used for the standby clock
+- Default Color - color used for the timer and countdown
+- Warning Color - color used when the timer is less than 30 seconds
+- Overtime Color - color used time limit has exceeded
 ##### Count-up After Time Ends
 This is important for timers which needs to show the overtime
 ##### Persist Student's Time
@@ -51,5 +51,6 @@ This changes the times to fit the additional talks during CO's Visit. Please pre
 Access the script settings, set songs, set time, and other things by going to *Tools > Scripts > kh-av-helper.py*
 
 # Bugs
--When closing OBS, a message appears that "OBS has crashed".
--You can file a bug report on the Issue tab if you found any bug or has any suggestion.
+- When closing OBS, a message appears that "OBS has crashed".
+- You can file a bug report on the Issue tab if you found any bug or has any suggestion.
+- Feel free to help me squash the bugs by forking this repository and sending pull requests
