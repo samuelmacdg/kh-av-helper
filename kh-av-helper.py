@@ -1,4 +1,5 @@
 import datetime
+from turtle import update
 import obspython as S
 import json
 import threading
@@ -15,6 +16,7 @@ class Timer:
     handler = None
     isTMS = False
     isPersisting = False
+    isStopWatch = False
 
 
 class Data:
@@ -73,6 +75,7 @@ def script_defaults(settings):
 
     S.obs_data_set_default_bool(settings, "timer_idle_clock", True)
     S.obs_data_set_default_bool(settings, "timer_countup", True)
+    S.obs_data_set_default_bool(settings, "timer_stopwatch", False)
     S.obs_data_set_default_bool(settings, "timer_co_visit", False)
 
     S.obs_data_set_default_string(settings, "songs_lang", "TG")
@@ -337,8 +340,11 @@ def timer_start_callback(props, prop):
     timer_names = ["timer_start", "timer_m_start"]
     persistTime = S.obs_data_get_bool(Data.settings, "persist_student_time")
     timer_obj = json.loads(S.obs_data_get_string(Data.settings, "timer_selector"))
+    stopwatch_mode = S.obs_properties_get(props, "timer_stopwatch")
+
 
     if Timer.active:
+        S.obs_property_set_enabled(stopwatch_mode, True)
         for timer_name in timer_names:
             timer_button = S.obs_properties_get(props, timer_name)
             S.obs_property_set_description(timer_button, "Start")
@@ -360,6 +366,7 @@ def timer_start_callback(props, prop):
             update_time_menu(props, prop, Data.settings)
 
     else:
+        S.obs_property_set_enabled(stopwatch_mode, False)
         if Timer.isPersisting:
             Timer.isPersisting = False
         for timer_name in timer_names:
@@ -444,7 +451,16 @@ def update_timer():
     else:
         delta = datetime.timedelta(seconds=0)
 
-        if Timer.time_end > now:
+        if Timer.isStopWatch:
+            delta = now - Timer.time_start
+            if Timer.status != 1:
+                default_color = S.obs_data_get_int(
+                    Data.settings, "timer_text_default_color")
+                set_source_setting_int(
+                    timer_source, "color", default_color)
+                Timer.status = 1
+
+        elif Timer.time_end > now:
             delta = Timer.time_end - now
             if(delta.seconds <= 30):
                 if Timer.status != 2:
@@ -475,7 +491,7 @@ def update_timer():
                 return
 
         secs = delta.seconds
-        if secs == 0:
+        if secs == 0 and not Timer.isStopWatch:
             if Timer.status != 3:
                 overtime_color = S.obs_data_get_int(
                     Data.settings, "timer_text_overtime_color")
@@ -522,6 +538,27 @@ def set_manual_timer_visibility(props, is_visible):
 
     S.obs_property_set_visible(a_mins, not is_visible)
 
+def stopwatch_callback(props, prop, settings):
+    stopwatch_mode = S.obs_data_get_bool(settings, "timer_stopwatch")
+
+    m_hour = S.obs_properties_get(props, "timer_m_hour")
+    m_mins = S.obs_properties_get(props, "timer_m_mins")
+    m_secs = S.obs_properties_get(props, "timer_m_secs")
+    a_mins = S.obs_properties_get(props, "timer_a_mins")
+    select = S.obs_properties_get(props, "timer_selector")
+
+    print(stopwatch_mode)
+
+    if stopwatch_mode:
+        for prop in [m_hour, m_mins, m_secs, a_mins, select]:
+            S.obs_property_set_visible(prop, not stopwatch_mode)
+    else:
+        S.obs_property_set_visible(select, not stopwatch_mode)
+        update_time_menu(props, prop, settings)
+
+    Timer.isStopWatch = S.obs_data_get_bool(settings, "timer_stopwatch")
+    return True
+
 def update_time_menu(props, prop, settings):
     timer_obj = json.loads(S.obs_data_get_string(Data.settings, "timer_selector"))
     duration = timer_obj["duration"]
@@ -556,6 +593,8 @@ def script_properties():
 
     # Timer Menu
     props_timer = S.obs_properties_create()
+    timer_stopwatch = S.obs_properties_add_bool(props_timer, "timer_stopwatch", "Stopwatch Mode")
+    S.obs_property_set_modified_callback(timer_stopwatch, stopwatch_callback)
     timer_selector = S.obs_properties_add_list(props_timer, "timer_selector", "Timer Selector", S.OBS_COMBO_TYPE_LIST, S.OBS_COMBO_FORMAT_STRING)
     manual_timer_obj = {
         "title": "Manual Timer",
