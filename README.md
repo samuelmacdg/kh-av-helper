@@ -54,3 +54,4 @@ Access the script settings, set songs, set time, and other things by going to *T
 - When closing OBS, a message appears that "OBS has crashed".
 - You can file a bug report on the Issue tab if you found any bug or has any suggestion.
 - Feel free to help me squash the bugs by forking this repository and sending pull requests
+- The Stopwatch may not accurately show the stopwatch status at startup. Untick or tick to see actual status. This will be fixed soon.
